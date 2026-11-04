@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<policy name="Customer refund policy" company="Inzozi Café" effective="2026-01-01">
+  <rule id="RF-1">A drink that was already served cannot be refunded, unless the wrong drink was served. Then it is replaced or refunded.</rule>
+  <rule id="RF-2">Food can be refunded within 24 hours if it is the wrong order or unsafe to eat. The customer must show the receipt.</rule>
+  <rule id="RF-3">Gift cards cannot be refunded or exchanged for cash.</rule>
+  <rule id="RF-4">An online prepaid order that was not delivered is refunded in full.</rule>
+  <rule id="RF-5">Refunds are paid back by the same method as the payment, within 5 working days.</rule>
+  <rule id="RF-6">A refund of more than 50,000 RWF needs the approval of the branch manager.</rule>
+  <rule id="RF-7">No refund is given for any order after 7 days.</rule>
+</policy>

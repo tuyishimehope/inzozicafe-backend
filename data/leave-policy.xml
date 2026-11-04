@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<policy name="Staff leave policy" company="Inzozi Café" effective="2026-01-01">
+  <section id="L-1" title="Annual leave">
+    <rule id="L-1.1">Staff with less than 1 year of service earn 1.5 working days of leave for each month worked.</rule>
+    <rule id="L-1.2">Staff with 1 to 3 years of service get 18 working days of annual leave per year.</rule>
+    <rule id="L-1.3">Staff with more than 3 years of service get 21 working days of annual leave per year.</rule>
+    <rule id="L-1.4">Up to 5 unused days can be carried over to the next year. They must be used before 31 March or they are lost.</rule>
+  </section>
+  <section id="L-2" title="Requesting leave">
+    <rule id="L-2.1">Leave of more than 5 working days must be requested at least 14 days in advance.</rule>
+    <rule id="L-2.2">Leave of 5 working days or less needs at least 3 days of notice. The branch manager approves it.</rule>
+  </section>
+  <section id="L-3" title="Sick and family leave">
+    <rule id="L-3.1">Sick leave is paid for up to 7 days a year. A doctor's certificate is needed from the third day.</rule>
+    <rule id="L-3.2">New fathers get 4 days of paid paternity leave, taken within 30 days of the birth.</rule>
+  </section>
+</policy>

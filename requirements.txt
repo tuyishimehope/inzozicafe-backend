@@ -1,0 +1,11 @@
+fastapi
+alembic
+sqlalchemy
+pydantic-settings
+pydantic
+asyncpg
+uvicorn
+greenlet
+ruff
+pgvector
+openai

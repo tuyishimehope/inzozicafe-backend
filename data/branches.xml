@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<branches cafe="Inzozi Café" updated="2026-09-01">
+  <branch id="B-KIM">
+    <name>Kimihurura</name>
+    <address>KG 9 Avenue, Kimihurura, Kigali</address>
+    <phone>+250 788 000 111</phone>
+    <hours>
+      <open days="Monday to Saturday" from="07:00" to="21:00"/>
+      <open days="Sunday" from="09:00" to="18:00"/>
+    </hours>
+    <notes>Outdoor seating is available. Wi-Fi is free for customers.</notes>
+  </branch>
+  <branch id="B-NYA">
+    <name>Nyamirambo</name>
+    <address>KN 2 Road, Nyamirambo, Kigali</address>
+    <phone>+250 788 000 222</phone>
+    <hours>
+      <open days="Monday to Sunday" from="08:00" to="20:00"/>
+    </hours>
+    <notes>Close to the Nyamirambo Women's Centre. No Wi-Fi.</notes>
+  </branch>
+  <branch id="B-KAC">
+    <name>Kacyiru</name>
+    <address>KG 7 Avenue, Kacyiru, Kigali</address>
+    <phone>+250 788 000 333</phone>
+    <hours>
+      <open days="Monday to Friday" from="07:00" to="19:00"/>
+      <closed days="Saturday and Sunday"/>
+    </hours>
+    <notes>Office-area branch. Closed at the weekend.</notes>
+  </branch>
+  <holidays id="B-HOL">
+    <rule>All branches close at 15:00 on 24 December.</rule>
+    <rule>All branches are closed on 25 December and on 1 January.</rule>
+  </holidays>
+</branches>

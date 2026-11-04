@@ -1,0 +1,196 @@
+{
+  "version": 3,
+  "cases": [
+    {
+      "id": 1,
+      "question": "Is the Masala Chai vegan?",
+      "expected": [
+        {
+          "file": "menu.xml",
+          "element_id": "D-02"
+        }
+      ],
+      "must_contain": [
+        "no",
+        "milk"
+      ]
+    },
+    {
+      "id": 2,
+      "question": "What time does Kimihurura close on Sunday?",
+      "expected": [
+        {
+          "file": "branches.xml",
+          "element_id": "B-KIM"
+        }
+      ],
+      "must_contain": [
+        "18:00"
+      ]
+    },
+    {
+      "id": 3,
+      "question": "How many days of annual leave after 2 years?",
+      "expected": [
+        {
+          "file": "leave-policy.xml",
+          "element_id": "L-1.2"
+        }
+      ],
+      "must_contain": [
+        "18"
+      ]
+    },
+    {
+      "id": 4,
+      "question": "Can a customer get a refund on a drink that was already served?",
+      "expected": [
+        {
+          "file": "refund-policy.xml",
+          "element_id": "RF-1"
+        }
+      ],
+      "must_contain": [
+        "cannot"
+      ]
+    },
+    {
+      "id": 5,
+      "question": "How much is delivery to Nyamirambo?",
+      "expected": [
+        {
+          "file": "delivery.xml",
+          "element_id": "DL-B"
+        }
+      ],
+      "must_contain": [
+        "2500"
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Which items contain peanuts?",
+      "expected": [
+        {
+          "file": "menu.xml",
+          "element_id": "F-04"
+        }
+      ],
+      "must_contain": [
+        "peanut cookie"
+      ]
+    },
+    {
+      "id": 7,
+      "question": "Is Kacyiru open on Saturday?",
+      "expected": [
+        {
+          "file": "branches.xml",
+          "element_id": "B-KAC"
+        }
+      ],
+      "must_contain": [
+        "closed"
+      ]
+    },
+    {
+      "id": 8,
+      "question": "How long do refunds take to arrive?",
+      "expected": [
+        {
+          "file": "refund-policy.xml",
+          "element_id": "RF-5"
+        }
+      ],
+      "must_contain": [
+        "5"
+      ]
+    },
+    {
+      "id": 9,
+      "question": "I ordered 8 days ago, can I get a refund?",
+      "expected": [
+        {
+          "file": "refund-policy.xml",
+          "element_id": "RF-7"
+        }
+      ],
+      "must_contain": [
+        "no"
+      ]
+    },
+    {
+      "id": 10,
+      "question": "What does rule RF-3 say?",
+      "expected": [
+        {
+          "file": "refund-policy.xml",
+          "element_id": "RF-3"
+        }
+      ],
+      "must_contain": [
+        "gift card"
+      ]
+    },
+    {
+      "id": 11,
+      "question": "What is the price of a cappuccino?",
+      "expected": [],
+      "must_contain": [
+        "not found"
+      ]
+    },
+    {
+      "id": 12,
+      "question": "Is there parking at Kimihurura?",
+      "expected": [],
+      "must_contain": [
+        "not found"
+      ]
+    },
+    {
+      "id": 13,
+      "question": "Do you have anything with groundnuts?",
+      "expected": [
+        {
+          "file": "menu.xml",
+          "element_id": "F-04"
+        }
+      ],
+      "must_contain": [
+        "peanut cookie"
+      ]
+    },
+    {
+      "id": 14,
+      "question": "What does rule rf-3 say?",
+      "expected": [
+        {
+          "file": "refund-policy.xml",
+          "element_id": "RF-3"
+        }
+      ],
+      "must_contain": [
+        "gift card"
+      ]
+    },
+    {
+      "id": 15,
+      "question": "What do D-02 and F-04 say?",
+      "expected": [
+        {
+          "file": "menu.xml",
+          "element_id": "D-02"
+        },
+        {
+          "file": "menu.xml",
+          "element_id": "F-04"
+        }
+      ],
+      "must_contain": [
+        "masala chai",
+        "peanut cookie"
+      ]
+    }
+  ]
+}

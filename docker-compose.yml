@@ -1,0 +1,37 @@
+services:
+
+  api:
+    build: .
+    container_name: inzozicafe-api
+    command: sh ./entrypoint.sh
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+
+  postgres:
+    image: pgvector/pgvector:pg16-trixie
+    container_name: inzozicafe-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: inzozicafe
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: inzozicafe
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d inzozicafe"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+
+volumes:
+  postgres_data:

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu cafe="Inzozi Café" currency="RWF" updated="2026-09-01">
+  <category id="drinks" name="Drinks">
+    <item id="D-01">
+      <name>Mango Juice</name>
+      <price>2500</price>
+      <vegan>true</vegan>
+      <allergens>none</allergens>
+      <description>Fresh mango blended with water. No added sugar.</description>
+    </item>
+    <item id="D-02">
+      <name>Masala Chai</name>
+      <price>2000</price>
+      <vegan>false</vegan>
+      <allergens>milk</allergens>
+      <description>Black tea with ginger and cardamom, brewed in milk.</description>
+    </item>
+    <item id="D-03">
+      <name>Rwandan Coffee (Americano)</name>
+      <price>1800</price>
+      <vegan>true</vegan>
+      <allergens>none</allergens>
+      <description>Single-origin coffee from Nyamasheke, served black.</description>
+    </item>
+  </category>
+  <category id="food" name="Food">
+    <item id="F-01">
+      <name>Mandazi</name>
+      <price>500</price>
+      <vegan>false</vegan>
+      <allergens>wheat, milk, egg</allergens>
+      <description>Sweet fried dough, baked fresh every morning.</description>
+    </item>
+    <item id="F-02">
+      <name>Chapati and Beans</name>
+      <price>3500</price>
+      <vegan>true</vegan>
+      <allergens>wheat</allergens>
+      <description>Soft chapati served with slow-cooked red beans.</description>
+    </item>
+    <item id="F-03">
+      <name>Chicken Sandwich</name>
+      <price>4500</price>
+      <vegan>false</vegan>
+      <allergens>wheat, egg</allergens>
+      <description>Grilled chicken with lettuce and egg mayonnaise on wheat bread.</description>
+    </item>
+    <item id="F-04">
+      <name>Peanut Cookie</name>
+      <price>1000</price>
+      <vegan>true</vegan>
+      <allergens>peanuts, wheat</allergens>
+      <description>Crunchy cookie made with roasted Rwandan peanuts.</description>
+    </item>
+  </category>
+</menu>
