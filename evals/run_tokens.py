@@ -1,41 +1,33 @@
-"""Step 7: how many tokens does RAG save compared with sending all five files?
+"""How many tokens does RAG save compared with sending all five files?
 
-    docker compose exec api python -m evals.run_tokens          # every case
-    docker compose exec api python -m evals.run_tokens 1 5      # only cases 1 and 5
+    python -m evals.run_tokens          # every case
+    python -m evals.run_tokens 1 5      # only cases 1 and 5
 
-Each case makes 2 chat calls (rag + full) and 1 embedding call. Mind the free-tier limit.
+Each case makes 2 chat calls (hybrid + full) and 1 embedding call. Mind the free-tier limit.
 """
 
 import asyncio
-import json
-import sys
-from contextlib import asynccontextmanager
-from pathlib import Path
 
-from app.db.dependencies import get_db_session
-from app.service.llm import answer_question_semantic
+from app.db.session import SessionLocal
+from app.services.answering import answer
+from evals.cases import selected
 
-cases = json.loads(Path("evals/document.json").read_text())["cases"]
-only = {int(a) for a in sys.argv[1:]}
+STRATEGIES = ("hybrid", "full")
 
 
-async def main():
-    totals = {"rag": [0, 0], "full": [0, 0]} 
-
-    async with asynccontextmanager(get_db_session)() as db:
+async def main() -> None:
+    totals = dict.fromkeys(STRATEGIES, 0)
+    async with SessionLocal() as db:
         print(f"{'#':>3}  {'rag in':>7} {'rag out':>8}  {'full in':>8} {'full out':>9}")
-        for case in cases:
-            if only and case["id"] not in only:
-                continue
+        for case in selected():
             row = []
-            for mode in ("rag", "full"):
-                usage = (await answer_question_semantic(case["question"], db, mode=mode)).usage
-                totals[mode][0] += usage.input_tokens
-                totals[mode][1] += usage.output_tokens
+            for strategy in STRATEGIES:
+                usage = (await answer(case["question"], db, strategy)).usage
+                totals[strategy] += usage.input_tokens + usage.output_tokens
                 row += [usage.input_tokens, usage.output_tokens]
             print(f"{case['id']:>3}  {row[0]:>7} {row[1]:>8}  {row[2]:>8} {row[3]:>9}")
 
-    rag, full = sum(totals["rag"]), sum(totals["full"])
+    rag, full = totals["hybrid"], totals["full"]
     print(f"\nTotal  rag={rag}  full={full}")
     if full:
         print(f"RAG used {1 - rag / full:.0%} fewer tokens")

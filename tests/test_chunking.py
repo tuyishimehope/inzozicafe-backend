@@ -1,6 +1,6 @@
 from collections import Counter
 
-from app.service.chunking import chunk_all
+from app.services.chunking import chunk_all
 
 
 def test_counts_per_file():

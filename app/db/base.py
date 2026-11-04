@@ -1,3 +1,5 @@
-from app.db.base_class import Base  # noqa: F401
+from sqlalchemy.orm import DeclarativeBase
 
-from app.models.model import Document, Chunk
+
+class Base(DeclarativeBase):
+    pass

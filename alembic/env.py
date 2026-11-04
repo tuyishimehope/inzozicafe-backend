@@ -4,38 +4,18 @@ from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from app.core.config.settings import settings
+from app.config import settings
 from app.db.base import Base
-
-
-
-
-DATABASE_NAME=settings.DATABASE_NAME
-DATABASE_PASSWORD=settings.DATABASE_PASSWORD
-DATABASE_HOST=settings.DATABASE_HOST
-DATABASE_PORT=settings.DATABASE_PORT
-DATABASE_USER=settings.DATABASE_USER
-
-config = context.config
-
-
-# if config.config_file_name is not None:
-    # fileConfig(config.config_file_name)
+import app.models  # noqa: F401  registers the tables on Base.metadata
 
 target_metadata = Base.metadata
-
-url = (
-    f"postgresql+asyncpg://{DATABASE_USER}:{DATABASE_PASSWORD.get_secret_value()}"
-    f"@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
-)
-config.set_main_option("sqlalchemy.url", url)
+DATABASE_URL = settings.database_url
 
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
-    url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url,
+        url=DATABASE_URL,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -57,7 +37,7 @@ async def run_migrations_online() -> None:
     """Run migrations in 'online' mode using an async engine."""
     
     connectable = create_async_engine(
-        config.get_main_option("sqlalchemy.url", ""),
+        DATABASE_URL,
         poolclass=pool.NullPool,
     )
 

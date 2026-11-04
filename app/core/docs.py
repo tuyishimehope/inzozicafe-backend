@@ -13,6 +13,6 @@ def register_docs(app: FastAPI) -> None:
     async def swagger_ui():
         return get_swagger_ui_html(
             openapi_url=OPENAPI_URL,
-            title="Docflow API Docs",
+            title="Inzozi Cafe API Docs",
             swagger_css_url="/static/swagger-dark.css",
         )
