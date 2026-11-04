@@ -4,7 +4,9 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict
 
 SearchStrategy = Literal["semantic", "hybrid"]
-AnswerStrategy = Literal["semantic", "hybrid", "full"]  # full = no retrieval, the token baseline
+AnswerStrategy = Literal[
+    "semantic", "hybrid", "full"
+]  # full = no retrieval, the token baseline
 
 
 class Source(BaseModel):

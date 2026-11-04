@@ -6,7 +6,9 @@ from app.services.chunking import DATA_DIR, PARSERS
 from app.services.retrieval import search
 
 
-async def answer(question: str, db: AsyncSession, strategy: AnswerStrategy = "hybrid") -> Answer:
+async def answer(
+    question: str, db: AsyncSession, strategy: AnswerStrategy = "hybrid"
+) -> Answer:
     if strategy == "full":
         return await chat(question, _full_context())
 
@@ -21,11 +23,14 @@ async def answer(question: str, db: AsyncSession, strategy: AnswerStrategy = "hy
 
 
 def _context(hits: list[Hit]) -> str:
-    return "\n\n".join(f"[file={h.file} element_id={h.element_id}]\n{h.text}" for h in hits)
+    return "\n\n".join(
+        f"[file={h.file} element_id={h.element_id}]\n{h.text}" for h in hits
+    )
 
 
 def _full_context() -> str:
     """The baseline: every file, whole, no retrieval."""
     return "\n\n".join(
-        f"[file={name}]\n{(DATA_DIR / name).read_text(encoding='utf-8')}" for name in PARSERS
+        f"[file={name}]\n{(DATA_DIR / name).read_text(encoding='utf-8')}"
+        for name in PARSERS
     )

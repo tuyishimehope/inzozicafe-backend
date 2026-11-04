@@ -16,11 +16,16 @@ from app.services.ai import embed
 
 CANDIDATES = 10  # how deep each list goes before merging
 RRF_K = 60  # damping constant from the RRF paper
-ID_PATTERN = re.compile(r"\b[A-Z]{1,3}-[A-Z0-9]+(?:\.[0-9]+)?\b")  # RF-3, D-02, L-1.2, B-KIM
+ID_PATTERN = re.compile(
+    r"\b[A-Z]{1,3}-[A-Z0-9]+(?:\.[0-9]+)?\b"
+)  # RF-3, D-02, L-1.2, B-KIM
 
 
 async def search(
-    question: str, db: AsyncSession, strategy: SearchStrategy = "hybrid", k: int = settings.TOP_K
+    question: str,
+    db: AsyncSession,
+    strategy: SearchStrategy = "hybrid",
+    k: int = settings.TOP_K,
 ) -> list[Hit]:
     [vector], _ = await embed([question])
     if strategy == "semantic":
@@ -46,10 +51,13 @@ async def _id_ids(db: AsyncSession, question: str) -> list[int]:
     return list(await db.scalars(select(Chunk.id).where(Chunk.element_id.in_(ids))))
 
 
-async def _keyword_ids(db: AsyncSession, question: str, limit: int = CANDIDATES) -> list[int]:
+async def _keyword_ids(
+    db: AsyncSession, question: str, limit: int = CANDIDATES
+) -> list[int]:
     # plainto_tsquery joins words with AND; swap to OR so one matching word is enough.
     query = func.to_tsquery(
-        "english", func.replace(func.plainto_tsquery("english", question).cast(String), "&", "|")
+        "english",
+        func.replace(func.plainto_tsquery("english", question).cast(String), "&", "|"),
     )
     document = func.to_tsvector("english", Chunk.text)
     statement = (
@@ -61,8 +69,12 @@ async def _keyword_ids(db: AsyncSession, question: str, limit: int = CANDIDATES)
     return list(await db.scalars(statement))
 
 
-async def _vector_ids(db: AsyncSession, vector: list[float], limit: int = CANDIDATES) -> list[int]:
-    statement = select(Chunk.id).order_by(Chunk.embedding.cosine_distance(vector)).limit(limit)
+async def _vector_ids(
+    db: AsyncSession, vector: list[float], limit: int = CANDIDATES
+) -> list[int]:
+    statement = (
+        select(Chunk.id).order_by(Chunk.embedding.cosine_distance(vector)).limit(limit)
+    )
     return list(await db.scalars(statement))
 
 

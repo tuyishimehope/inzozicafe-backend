@@ -35,9 +35,13 @@ def by_id(element_id):
 def test_facts_the_questions_need_are_in_the_text():
     assert "vegan: no" in by_id("D-02").text  # Masala Chai vegan?
     assert "peanuts" in by_id("F-04").text  # peanut items
-    assert "Sunday from 09:00 to 18:00" in by_id("B-KIM").text  # Kimihurura Sunday close
+    assert (
+        "Sunday from 09:00 to 18:00" in by_id("B-KIM").text
+    )  # Kimihurura Sunday close
     assert "closed Saturday and Sunday" in by_id("B-KAC").text  # Kacyiru on Saturday
     assert "18 working days" in by_id("L-1.2").text  # leave after 2 years
     assert "fee: 2500 RWF" in by_id("DL-B").text  # Nyamirambo delivery fee
     assert "Gift cards cannot be refunded" in by_id("RF-3").text
-    assert "RF-3" in by_id("RF-3").text  # the id is in the text for keyword search later
+    assert (
+        "RF-3" in by_id("RF-3").text
+    )  # the id is in the text for keyword search later

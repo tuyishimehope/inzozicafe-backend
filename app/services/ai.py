@@ -12,7 +12,9 @@ from app.schemas import Answer, Usage
 
 logger = logging.getLogger(__name__)
 
-SYSTEM_PROMPT = (Path(__file__).parents[1] / "prompts" / "chat_v1.md").read_text(encoding="utf-8")
+SYSTEM_PROMPT = (Path(__file__).parents[1] / "prompts" / "chat_v1.md").read_text(
+    encoding="utf-8"
+)
 
 
 @cache
@@ -26,7 +28,9 @@ def client() -> AsyncOpenAI:
 
 async def embed(texts: list[str]) -> tuple[list[list[float]], str]:
     """One vector per text, in the same order, plus the model that made them."""
-    response = await client().embeddings.create(model=settings.EMBEDDING_MODEL, input=texts)
+    response = await client().embeddings.create(
+        model=settings.EMBEDDING_MODEL, input=texts
+    )
     logger.info(
         "Embedding tokens",
         extra={"model": response.model, "input_tokens": response.usage.prompt_tokens},
@@ -51,5 +55,9 @@ async def chat(question: str, context: str) -> Answer:
     logger.info("Chat tokens", extra={"model": response.model, **usage.model_dump()})
 
     content = response.choices[0].message.content
-    answer = Answer.model_validate(json.loads(content)) if content else Answer(answer="not found")
+    answer = (
+        Answer.model_validate(json.loads(content))
+        if content
+        else Answer(answer="not found")
+    )
     return answer.model_copy(update={"usage": usage})

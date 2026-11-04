@@ -30,7 +30,10 @@ async def eval_retrieval(cases: list[dict]) -> None:
             expected = {(e["file"], e["element_id"]) for e in case["expected"]}
             marks = []
             for strategy in STRATEGIES:
-                got = {(h.file, h.element_id) for h in await search(case["question"], db, strategy)}
+                got = {
+                    (h.file, h.element_id)
+                    for h in await search(case["question"], db, strategy)
+                }
                 hit = expected <= got  # every expected chunk is in the top k
                 hits[strategy] += hit
                 marks.append("HIT" if hit else "MISS")
@@ -47,12 +50,16 @@ async def eval_answers(cases: list[dict]) -> None:
     async with SessionLocal() as db:
         for case in cases:
             result = await answer(case["question"], db)
-            ok = all(normalise(w) in normalise(result.answer) for w in case["must_contain"])
+            ok = all(
+                normalise(w) in normalise(result.answer) for w in case["must_contain"]
+            )
             passed += ok
             print(f"[{'PASS' if ok else 'FAIL'}] #{case['id']} {case['question']}")
             print(f"        answer={result.answer!r}")
-            print(f"        sources={[(s.file, s.element_id) for s in result.sources]}"
-                  f"  dropped={[(s.file, s.element_id) for s in result.dropped_sources]}")
+            print(
+                f"        sources={[(s.file, s.element_id) for s in result.sources]}"
+                f"  dropped={[(s.file, s.element_id) for s in result.dropped_sources]}"
+            )
     print(f"\nAnswer pass rate: {passed}/{len(cases)}")
 
 

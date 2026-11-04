@@ -80,7 +80,9 @@ class JsonLogFormatter(logging.Formatter):
 
     def format(self, record: logging.LogRecord) -> str:
         payload = {
-            "timestamp": datetime.fromtimestamp(record.created, timezone.utc).isoformat(),
+            "timestamp": datetime.fromtimestamp(
+                record.created, timezone.utc
+            ).isoformat(),
             "level": record.levelname,
             "logger": record.name,
             "message": record.getMessage(),
@@ -146,7 +148,9 @@ class NonBlockingQueueHandler(QueueHandler):
         try:
             self.queue.put_nowait(record)
         except queue.Full:
-            self.dropped += 1  # handlers run one at a time (the handler lock), so this is safe
+            self.dropped += (
+                1  # handlers run one at a time (the handler lock), so this is safe
+            )
 
 
 class _Listener(QueueListener):
@@ -166,7 +170,9 @@ class _Listener(QueueListener):
 
 
 _writer: logging.Handler | None = None  # the handler that really writes (stdout)
-_handler: logging.Handler | None = None  # what the application writes to (queue or writer)
+_handler: logging.Handler | None = (
+    None  # what the application writes to (queue or writer)
+)
 _listener: _Listener | None = None
 _exit_hook_registered = False
 
@@ -177,7 +183,10 @@ def queue_logs_enabled() -> bool:
 
 
 def configure_logging(
-    *, use_queue: bool = False, stream: TextIO | None = None, max_queue_size: int | None = None
+    *,
+    use_queue: bool = False,
+    stream: TextIO | None = None,
+    max_queue_size: int | None = None,
 ) -> None:
     """Set up logging for this process. Safe to call again: the new setup replaces the old one.
 
@@ -187,7 +196,9 @@ def configure_logging(
     """
     global _writer, _handler, _listener, _exit_hook_registered
     root_logger = logging.getLogger()
-    shutdown_logging(keep_output=False)  # remove our previous setup, flushing what is waiting
+    shutdown_logging(
+        keep_output=False
+    )  # remove our previous setup, flushing what is waiting
 
     writer = logging.StreamHandler(stream) if stream is not None else _StdoutHandler()
     writer.setFormatter(JsonLogFormatter())
@@ -233,13 +244,16 @@ def shutdown_logging(*, keep_output: bool = True) -> None:
     dropped = dropped_records()
     if dropped:
         print(
-            f"{dropped} log records were dropped because the log queue was full", file=sys.stderr
+            f"{dropped} log records were dropped because the log queue was full",
+            file=sys.stderr,
         )
     root_logger = logging.getLogger()
     if _handler is not None:
         root_logger.removeHandler(_handler)
         if keep_output and _writer is not None:
-            if _handler is not _writer:  # the queue handler had the filter, the writer did not
+            if (
+                _handler is not _writer
+            ):  # the queue handler had the filter, the writer did not
                 _writer.addFilter(RequestIdFilter())
             root_logger.addHandler(_writer)
             _handler = _writer

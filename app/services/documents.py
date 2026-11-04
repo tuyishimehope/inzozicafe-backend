@@ -25,11 +25,18 @@ async def index_all(db: AsyncSession) -> list[str]:
             Document(
                 file_name=file_name,
                 chunks=[
-                    Chunk(element_id=c.element_id, text=c.text, embedding=v, model_name=model)
+                    Chunk(
+                        element_id=c.element_id,
+                        text=c.text,
+                        embedding=v,
+                        model_name=model,
+                    )
                     for c, v in zip(chunks, vectors, strict=True)
                 ],
             )
         )
-        await db.commit()  # one file = one transaction: the document with all its chunks, or nothing
+        await (
+            db.commit()
+        )  # one file = one transaction: the document with all its chunks, or nothing
         indexed.append(file_name)
     return indexed

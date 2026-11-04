@@ -107,7 +107,11 @@ def chunk_branches(path: Path) -> list[ChunkData]:
     for holidays in root.findall("holidays"):
         rules = " ".join(_own_text(rule) for rule in holidays.findall("rule"))
         chunks.append(
-            ChunkData(path.name, _id(holidays), f"Branches > Holidays ({_id(holidays)}): {rules}")
+            ChunkData(
+                path.name,
+                _id(holidays),
+                f"Branches > Holidays ({_id(holidays)}): {rules}",
+            )
         )
     return chunks
 
@@ -120,7 +124,9 @@ def chunk_delivery(path: Path) -> list[ChunkData]:
     for general in root.findall("general"):
         general_id = _id(general)
         hours = general.find("orderHours")
-        order_hours = f"{hours.get('from')} to {hours.get('to')}" if hours is not None else ""
+        order_hours = (
+            f"{hours.get('from')} to {hours.get('to')}" if hours is not None else ""
+        )
         text = (
             f"Delivery > General ({general_id}): "
             f"orders are taken from {order_hours}; "
@@ -160,7 +166,9 @@ def chunk_refund_policy(path: Path) -> list[ChunkData]:
     chunks = []
     for rule in root.findall("rule"):
         rule_id = _id(rule)
-        chunks.append(ChunkData(path.name, rule_id, f"{policy} > {rule_id}: {_own_text(rule)}"))
+        chunks.append(
+            ChunkData(path.name, rule_id, f"{policy} > {rule_id}: {_own_text(rule)}")
+        )
     return chunks
 
 
@@ -188,4 +196,3 @@ def chunk_all(data_dir: Path = DATA_DIR) -> list[ChunkData]:
             raise ValueError(f"duplicate chunk {key}")
         seen.add(key)
     return chunks
-
