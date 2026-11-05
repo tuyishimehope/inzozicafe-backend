@@ -1,5 +1,3 @@
-Yes. Your foundation is now solid: chunking, embeddings, hybrid search, citations, and evals that measure everything. Here's what to add, in the order I'd build it. Each item fixes a problem you've already seen or will soon. Keep the rule you already follow: one change, then re-run the scorecard.
-
 ## 1. A "not found" gate *(fixes a problem you've seen)*
 
 Search always returns 3 chunks, even for the cappuccino question. Right now only the model protects you.
@@ -42,9 +40,3 @@ Follow-ups break: "Is Kacyiru open Saturday?" then "What about Sunday?". The sec
 ## 7. LLM-as-judge *(when `must_contain` gets too crude)*
 
 `"no" in answer` passes "I do**n**'t k**no**w". A second model can grade *meaning*: "Does this answer say the Masala Chai is not vegan because it has milk? yes/no". Keep `must_contain` as a cheap first check.
-
-## My recommendation
-
-Do **1 → 2** next. Both fix problems you've already seen in your own output, both are measurable with what you've built, and together they're the core of most production RAG systems.
-
-**Before you start #1, answer this:** why is a distance threshold risky if you later change the embedding model? (Hint: think back to the "two different maps" idea.)
