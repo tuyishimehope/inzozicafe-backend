@@ -14,4 +14,4 @@ async def list_documents(db: DbSession):
 
 @router.post("/index")
 async def index_documents(db: DbSession) -> dict[str, list[str]]:
-    return {"indexed": await documents.index_all(db)}
+    return await documents.index_all(db)

@@ -14,6 +14,8 @@ class Document(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     file_name: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    # SHA-256 of the file's bytes. A different hash means the file changed and must be re-indexed.
+    content_hash: Mapped[str] = mapped_column(String(64), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime, server_default=func.now(), nullable=False
     )
