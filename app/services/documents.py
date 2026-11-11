@@ -22,7 +22,9 @@ def content_hash(path: Path) -> str:
 
 async def index_all(db: AsyncSession) -> dict[str, list[str]]:
     """Bring the database in line with the files: add new, re-index changed, drop removed."""
-    report: dict[str, list[str]] = {"added": [], "updated": [], "unchanged": [], "removed": []}
+    report: dict[str, list[str]] = {
+        "added": [], "updated": [], "unchanged": [], "removed": [], "missing": []
+    }
     stored = {d.file_name: d for d in await db.scalars(select(Document))}
     # The model each document's vectors came from. Vectors from two models can't be compared.
     by_document = select(Chunk.document_id, func.min(Chunk.model_name)).group_by(Chunk.document_id)
@@ -31,8 +33,12 @@ async def index_all(db: AsyncSession) -> dict[str, list[str]]:
 
     for file_name, parse in PARSERS.items():
         path = DATA_DIR / file_name
-        new_hash = content_hash(path)
         document = stored.pop(file_name, None)
+        if not path.is_file():
+            # Keep what's stored: a file that is missing for a moment shouldn't wipe its chunks.
+            report["missing"].append(file_name)
+            continue
+        new_hash = content_hash(path)
 
         if (
             document is not None

@@ -3,7 +3,7 @@ services:
   api:
     build: .
     container_name: inzozicafe-api
-    command: sh ./entrypoint.sh
+    command: sh ./entrypoint.sh --reload  # development only: restart on code changes
     ports:
       - "8000:8000"
     env_file:
@@ -19,15 +19,15 @@ services:
     container_name: inzozicafe-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: inzozicafe
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: inzozicafe
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     ports:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d inzozicafe"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 3s
       retries: 12

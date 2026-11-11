@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
+
+MAX_QUESTION_CHARS = 500  # every character is paid for twice: embedding and chat
 
 SearchStrategy = Literal["semantic", "hybrid"]
 AnswerStrategy = Literal[
@@ -31,7 +33,7 @@ class Answer(BaseModel):
 
 
 class Question(BaseModel):
-    question: str
+    question: str = Field(min_length=1, max_length=MAX_QUESTION_CHARS)
     strategy: AnswerStrategy = "hybrid"
 
 

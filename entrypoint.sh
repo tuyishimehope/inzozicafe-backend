@@ -8,4 +8,5 @@ alembic upgrade head
 
 echo "Starting API..."
 
-exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+# Extra arguments are passed to uvicorn: docker-compose adds --reload for development.
+exec uvicorn app.main:app --host 0.0.0.0 --port 8000 "$@"
