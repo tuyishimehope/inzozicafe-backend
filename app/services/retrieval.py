@@ -27,7 +27,7 @@ async def search(
     strategy: SearchStrategy = "hybrid",
     k: int = settings.TOP_K,
 ) -> list[Hit]:
-    [vector], _ = await embed([question])
+    [vector] = await embed([question])
     if strategy == "semantic":
         return await _hits(db, await _vector_ids(db, vector, k))
 

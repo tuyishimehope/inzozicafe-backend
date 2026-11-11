@@ -3,6 +3,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.api.v1 import router as api_v1
 from app.core.docs import register_docs
+from app.core.errors import register_error_handlers
 from app.core.logging import configure_logging, queue_logs_enabled
 from app.core.request_log import RequestLogMiddleware
 
@@ -13,6 +14,7 @@ app.add_middleware(RequestLogMiddleware)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(api_v1)
 register_docs(app)
+register_error_handlers(app)
 
 
 @app.get("/health", include_in_schema=False)

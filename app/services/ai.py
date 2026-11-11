@@ -1,11 +1,11 @@
 """Every call to the model provider goes through here: embeddings and chat."""
 
-import json
 import logging
 from functools import cache
 from pathlib import Path
 
 from openai import AsyncOpenAI
+from pydantic import ValidationError
 
 from app.config import settings
 from app.schemas import Answer, Usage
@@ -26,8 +26,8 @@ def client() -> AsyncOpenAI:
     )
 
 
-async def embed(texts: list[str]) -> tuple[list[list[float]], str]:
-    """One vector per text, in the same order, plus the model that made them."""
+async def embed(texts: list[str]) -> list[list[float]]:
+    """One vector per text, in the same order."""
     response = await client().embeddings.create(
         model=settings.EMBEDDING_MODEL, input=texts
     )
@@ -35,7 +35,7 @@ async def embed(texts: list[str]) -> tuple[list[list[float]], str]:
         "Embedding tokens",
         extra={"model": response.model, "input_tokens": response.usage.prompt_tokens},
     )
-    return [item.embedding for item in response.data], response.model
+    return [item.embedding for item in response.data]
 
 
 async def chat(question: str, context: str) -> Answer:
@@ -54,10 +54,21 @@ async def chat(question: str, context: str) -> Answer:
     )
     logger.info("Chat tokens", extra={"model": response.model, **usage.model_dump()})
 
-    content = response.choices[0].message.content
-    answer = (
-        Answer.model_validate(json.loads(content))
-        if content
-        else Answer(answer="not found")
-    )
+    answer = _parse_answer(response.choices[0].message.content, response.model)
     return answer.model_copy(update={"usage": usage})
+
+
+def _parse_answer(content: str | None, model: str) -> Answer:
+    """The JSON object in the reply, ignoring ```json fences or text around it.
+
+    A reply that still isn't a valid Answer becomes "not found" with no sources: better
+    no answer than one whose citations we can't trust.
+    """
+    text = content or ""
+    start, end = text.find("{"), text.rfind("}")
+    try:
+        return Answer.model_validate_json(text[start : end + 1] if start != -1 else text)
+    except ValidationError:
+        # Log the model only: the reply may contain the user's question.
+        logger.warning("Model reply was not a valid answer", extra={"model": model})
+        return Answer(answer="not found")

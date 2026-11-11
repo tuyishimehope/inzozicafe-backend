@@ -2,9 +2,10 @@ import hashlib
 from collections.abc import Sequence
 from pathlib import Path
 
-from sqlalchemy import delete, select
+from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.config import settings
 from app.models import Chunk, Document
 from app.services.ai import embed
 from app.services.chunking import DATA_DIR, PARSERS
@@ -23,19 +24,27 @@ async def index_all(db: AsyncSession) -> dict[str, list[str]]:
     """Bring the database in line with the files: add new, re-index changed, drop removed."""
     report: dict[str, list[str]] = {"added": [], "updated": [], "unchanged": [], "removed": []}
     stored = {d.file_name: d for d in await db.scalars(select(Document))}
+    # The model each document's vectors came from. Vectors from two models can't be compared.
+    by_document = select(Chunk.document_id, func.min(Chunk.model_name)).group_by(Chunk.document_id)
+    stored_models = dict((await db.execute(by_document)).all())
+    model = settings.EMBEDDING_MODEL
 
     for file_name, parse in PARSERS.items():
         path = DATA_DIR / file_name
         new_hash = content_hash(path)
         document = stored.pop(file_name, None)
 
-        if document is not None and document.content_hash == new_hash:
-            report["unchanged"].append(file_name)  # same bytes: don't pay for embeddings again
+        if (
+            document is not None
+            and document.content_hash == new_hash
+            and stored_models.get(document.id) == model
+        ):
+            report["unchanged"].append(file_name)  # same bytes, same model: nothing to redo
             continue
 
         # Embed before touching the database, so no transaction waits on the network.
         chunks = parse(path)
-        vectors, model = await embed([c.text for c in chunks])
+        vectors = await embed([c.text for c in chunks])
         rows = [
             Chunk(element_id=c.element_id, text=c.text, embedding=v, model_name=model)
             for c, v in zip(chunks, vectors, strict=True)
