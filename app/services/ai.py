@@ -69,6 +69,5 @@ def _parse_answer(content: str | None, model: str) -> Answer:
     try:
         return Answer.model_validate_json(text[start : end + 1] if start != -1 else text)
     except ValidationError:
-        # Log the model only: the reply may contain the user's question.
         logger.warning("Model reply was not a valid answer", extra={"model": model})
         return Answer(answer="not found")
