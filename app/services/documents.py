@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.config import settings
 from app.models import Chunk, Document
 from app.services.ai import embed
-from app.services.chunking import DATA_DIR, PARSERS
+from app.services.chunking import DATA_DIR, PARSERS, chunk_file
 
 
 async def list_documents(db: AsyncSession) -> Sequence[Document]:
@@ -31,7 +31,7 @@ async def index_all(db: AsyncSession) -> dict[str, list[str]]:
     stored_models = dict((await db.execute(by_document)).all())
     model = settings.EMBEDDING_MODEL
 
-    for file_name, parse in PARSERS.items():
+    for file_name in PARSERS:
         path = DATA_DIR / file_name
         document = stored.pop(file_name, None)
         if not path.is_file():
@@ -49,7 +49,7 @@ async def index_all(db: AsyncSession) -> dict[str, list[str]]:
             continue
 
         # Embed before touching the database, so no transaction waits on the network.
-        chunks = parse(path)
+        chunks = chunk_file(path)
         vectors = await embed([c.text for c in chunks])
         rows = [
             Chunk(element_id=c.element_id, text=c.text, embedding=v, model_name=model)
